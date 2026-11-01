@@ -41,12 +41,10 @@ build-backend = "hatchling.build"
 packages = ["src/gwflo"]
 
 [tool.uv.sources]
-# Until gridworks-base 0.6.2 (the Flo transport class) is on PyPI and the
-# bruce callable is on optimal-flexibility main, both resolve to the
-# sibling checkouts. The deploy form is a PyPI floor for gridworks-base and
-# `{ git = "ssh://git@github.com/thdfw/optimal-flexibility", rev = "<sha>" }`
-# for bruce-energy.
-gridworks-base = { path = "../gridworks-base", editable = true }
+# gridworks-base comes from PyPI. bruce resolves to the sibling checkout
+# until the service callable is on optimal-flexibility main; the deploy
+# form is `{ git = "ssh://git@github.com/thegridelectric/optimal-flexibility",
+# rev = "<sha>" }`.
 bruce-energy = { path = "../optimal-flexibility", editable = true }
 
 [dependency-groups]
@@ -54,6 +52,7 @@ dev = [
     "paho-mqtt>=2.1",
     "pyright>=1.1.408",
     "pytest>=8.0",
+    "pyyaml>=6.0",
     "ruff>=0.5.6",
 ]
 
