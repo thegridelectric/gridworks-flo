@@ -1,0 +1,22 @@
+[Unit]
+Description=GridWorks FLO — the optimizer service (flo.params in, flo.recommendation out)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=flo
+# Repo root as CWD so `.env` at the repo root resolves.
+WorkingDirectory=/home/flo/gridworks-flo
+ExecStart=/home/flo/gridworks-flo/.venv/bin/gwflo rabbit
+Restart=always
+RestartSec=1
+# The actor plus GWFLO_WORKERS builds at the measured all-tanks peak
+# (2 GB each) with margin; a build past the cap is killed and the unit
+# keeps serving.
+MemoryMax=6G
+# A build in flight finishes or the pool is torn down: give stop time.
+TimeoutStopSec=90
+
+[Install]
+WantedBy=multi-user.target

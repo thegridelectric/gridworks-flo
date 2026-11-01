@@ -1,0 +1,11 @@
+# gwflo convenience aliases — pure spelling over systemctl/tail, no
+# logic. Sourced from the box login's ~/.bashrc; the sudoers drop-in
+# (/etc/sudoers.d/flo) grants exactly the systemctl invocations below.
+
+alias flostart='sudo systemctl start flo-rabbit'
+alias flostop='sudo systemctl stop flo-rabbit'
+alias florestart='sudo systemctl restart flo-rabbit'
+alias flostatus='systemctl status flo-rabbit --no-pager'
+
+alias flolog='cd "$HOME"/.local/state/gridworks/flo/log && tail -F *.log'
+alias flojournal='journalctl -u flo-rabbit -f'

@@ -1,0 +1,18 @@
+# Seed request for gridworks-flo (gwflo).
+#
+# Drives `uv run sema snapshot prepare ... && sema snapshot build --package-name gwflo`
+# (run from the sema repo by scripts/regen_sema_snapshot.sh). The two words
+# on the FLO boundary: the request and the reply. The closure brings the
+# tuning words (whose TypeName selects the FLO), the optimal path and the
+# unitless PQ pair.
+
+initial_targets:
+  types:
+    flo.params:
+      versions: ["000"]
+    flo.recommendation:
+      versions: ["000"]
+
+# Local class/module names drop the gw ceremony inside this package.
+local_names:
+  strip_prefixes: [gw1, gw]
