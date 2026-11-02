@@ -52,7 +52,7 @@ and logged.
 ## Run
 
 ```shell
-uv sync --all-groups --all-extras   # --extra bruce needs ssh access to the optimal-flexibility fork
+uv sync --all-groups --all-extras   # --extra bruce fetches the optimal-flexibility fork over https
 cp template.env .env                # and fill in
 uv run gwflo rabbit
 ```

@@ -45,7 +45,7 @@ packages = ["src/gwflo"]
 # so the lock resolves anywhere and a box installs that exact optimizer.
 # To work on bruce itself: `uv pip install -e ../optimal-flexibility`
 # after `uv sync` (the next sync restores the pin).
-bruce-energy = { git = "ssh://git@github.com/thegridelectric/optimal-flexibility", tag = "v0.1.0+gw1" }
+bruce-energy = { git = "https://github.com/thegridelectric/optimal-flexibility", tag = "v0.1.0+gw1" }
 
 [dependency-groups]
 dev = [
