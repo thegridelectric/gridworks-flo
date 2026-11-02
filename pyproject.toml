@@ -41,19 +41,18 @@ build-backend = "hatchling.build"
 packages = ["src/gwflo"]
 
 [tool.uv.sources]
-# Until gridworks-base 0.6.2 (the Flo transport class) is on PyPI and the
-# bruce callable is on optimal-flexibility main, both resolve to the
-# sibling checkouts. The deploy form is a PyPI floor for gridworks-base and
-# `{ git = "ssh://git@github.com/thdfw/optimal-flexibility", rev = "<sha>" }`
-# for bruce-energy.
-gridworks-base = { path = "../gridworks-base", editable = true }
-bruce-energy = { path = "../optimal-flexibility", editable = true }
+# bruce is pinned to a tag on the GridWorks fork of optimal-flexibility,
+# so the lock resolves anywhere and a box installs that exact optimizer.
+# To work on bruce itself: `uv pip install -e ../optimal-flexibility`
+# after `uv sync` (the next sync restores the pin).
+bruce-energy = { git = "ssh://git@github.com/thegridelectric/optimal-flexibility", tag = "v0.1.0+gw1" }
 
 [dependency-groups]
 dev = [
     "paho-mqtt>=2.1",
     "pyright>=1.1.408",
     "pytest>=8.0",
+    "pyyaml>=6.0",
     "ruff>=0.5.6",
 ]
 

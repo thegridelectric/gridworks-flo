@@ -16,7 +16,8 @@ from paho.mqtt.enums import CallbackAPIVersion
 from gwflo.config import GwfloSettings
 from gwflo.flo_actor import FloActor
 from gwflo.pool import BuildPool
-from tests.conftest import alice_request, broker_up
+from gwflo.sema.types import FloParams
+from tests.conftest import alice_request, broker_up, bruce_can_build, oak_bruce_request
 
 MQTT_PORT = 1885
 
@@ -30,11 +31,9 @@ def wait_for(predicate, timeout_s: float, what: str) -> None:
     raise AssertionError(f"timed out waiting for {what}")
 
 
-@pytest.mark.broker
-def test_alice_request_over_mqtt_is_answered(settings: GwfloSettings) -> None:
-    if not (broker_up(5672) and broker_up(MQTT_PORT)):
-        pytest.skip("no dev broker on localhost:5672 + 1885")
-    request = alice_request()
+def round_trip(settings: GwfloSettings, request: FloParams, timeout_s: float) -> dict:
+    """Publish the request on the MQTT door as the LTN would and return the
+    flo.recommendation payload that comes back on the LTN's topic."""
     ltn_lrh = request.g_node_alias.replace(".", "-")
     flo_lrh = settings.service_alias.replace(".", "-")
     replies: Queue[bytes] = Queue()
@@ -58,7 +57,7 @@ def test_alice_request_over_mqtt_is_answered(settings: GwfloSettings) -> None:
         )
         client.publish(f"gw/{ltn_lrh}/to/flo/flo-params", body)
         try:
-            reply = json.loads(replies.get(timeout=30))
+            reply = json.loads(replies.get(timeout=timeout_s))
         except Empty:
             raise AssertionError("no flo.recommendation came back over MQTT") from None
         assert reply["TypeName"] == "gw"
@@ -68,9 +67,42 @@ def test_alice_request_over_mqtt_is_answered(settings: GwfloSettings) -> None:
         assert payload["TypeName"] == "flo.recommendation"
         assert payload["BidderAlias"] == request.g_node_alias
         assert payload["OptimalPathList"][0]["StartUnixS"] == request.start_unix_s
-        assert payload["FloName"] == "alice"
         assert actor.answered == 1
+        return payload
     finally:
         actor.stop()
         client.loop_stop()
         client.disconnect()
+
+
+@pytest.mark.broker
+def test_alice_request_over_mqtt_is_answered(settings: GwfloSettings) -> None:
+    if not (broker_up(5672) and broker_up(MQTT_PORT)):
+        pytest.skip("no dev broker on localhost:5672 + 1885")
+    payload = round_trip(settings, alice_request(), timeout_s=30)
+    assert payload["FloName"] == "alice"
+
+
+@pytest.mark.broker
+def test_bruce_request_over_mqtt_is_answered(settings: GwfloSettings) -> None:
+    """The same seam with the real optimizer behind it: oak's plant shape
+    against its cached matrix, one pair per quantity change, one path per
+    pair, the first step of each path the bid at that pair's price."""
+    if not (broker_up(5672) and broker_up(MQTT_PORT)):
+        pytest.skip("no dev broker on localhost:5672 + 1885")
+    request = oak_bruce_request()
+    if not bruce_can_build(request):
+        pytest.skip("no bruce extra, or no cached matrix for oak's plant shape")
+    payload = round_trip(settings, request, timeout_s=120)
+    assert payload["FloName"] == "bruce"
+    pairs = payload["PqPairs"]
+    assert pairs[0]["PriceX1000"] == round(request.price_max_usd_mwh * 1000)
+    assert len(pairs) >= 2
+    assert len(payload["OptimalPathList"]) == len(pairs)
+    assert [p["PriceX1000"] for p in pairs] == sorted(
+        (p["PriceX1000"] for p in pairs), reverse=True
+    )
+    assert all(
+        path["StepDurationMinutes"] == request.step_duration_minutes
+        for path in payload["OptimalPathList"]
+    )

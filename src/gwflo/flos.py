@@ -72,7 +72,7 @@ def bruce(request: FloParams) -> FloRecommendation:
     # Imported here, not at module top: bruce (numpy, pandas, the graph)
     # is loaded only in the worker process that builds, so the actor stays
     # slim and a deploy without the bruce extra still answers alice.
-    from bruce.service import recommend_bytes  # noqa: PLC0415
+    from bruce.service import recommend_bytes  # noqa: PLC0415  # pyright: ignore[reportMissingImports]
 
     return FloRecommendation.from_bytes(recommend_bytes(request.to_bytes()))
 
