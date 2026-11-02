@@ -69,12 +69,12 @@ def bruce_can_build(request: FloParams) -> bool:
     has a cached transition matrix here. The request crosses into bruce as
     bytes: the two packages share the vocabulary, not Python types."""
     try:
-        from bruce.graph_optimizer.assets.heat_pump_water_tank.transition_matrix_params import (  # noqa: PLC0415
+        from bruce.graph_optimizer.assets.heat_pump_water_tank.transition_matrix_params import (  # noqa: PLC0415  # pyright: ignore[reportMissingImports]
             HeatPumpWaterTankTransitionMatrixParams,
         )
-        from bruce.graph_optimizer.settings import config_dir  # noqa: PLC0415
-        from bruce.sema.types import FloParams as BruceFloParams  # noqa: PLC0415
-        from bruce.service import params_from_request  # noqa: PLC0415
+        from bruce.graph_optimizer.settings import config_dir  # noqa: PLC0415  # pyright: ignore[reportMissingImports]
+        from bruce.sema.types import FloParams as BruceFloParams  # noqa: PLC0415  # pyright: ignore[reportMissingImports]
+        from bruce.service import params_from_request  # noqa: PLC0415  # pyright: ignore[reportMissingImports]
     except ImportError:
         return False
     params = params_from_request(BruceFloParams.from_bytes(request.to_bytes()))
