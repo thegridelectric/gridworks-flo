@@ -52,10 +52,15 @@ and logged.
 ## Run
 
 ```shell
-uv sync --all-groups --all-extras   # --extra bruce needs access to optimal-flexibility
+uv sync --all-groups --all-extras   # --extra bruce needs ssh access to the optimal-flexibility fork
 cp template.env .env                # and fill in
 uv run gwflo rabbit
 ```
+
+bruce is pinned to one tag of `thegridelectric/optimal-flexibility` in
+`pyproject.toml`. To run against a local bruce checkout instead, after the
+sync: `uv pip install -e ../optimal-flexibility`; the next `uv sync` puts the
+pin back.
 
 `./ci.sh` is the gate: ruff, pyright, pytest. The broker tests need the
 gwbase dev broker (`gw-dev-rabbit`: AMQP on 5672, MQTT on 1885) and
