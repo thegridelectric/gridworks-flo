@@ -26,7 +26,7 @@ def test_alice_buys_nothing_at_the_ceiling() -> None:
 
 def test_alice_refuses_another_tuning() -> None:
     request = alice_request().model_copy(
-        update={"tuning": FloTuningBruce.from_dict(sample("flo.tuning.bruce.000.json"))}
+        update={"tuning": FloTuningBruce.from_dict(sample("flo.tuning.bruce.001.json"))}
     )
     with pytest.raises(TypeError):
         alice(request)

@@ -19,13 +19,24 @@ wheels = [
 [[package]]
 name = "bruce-energy"
 version = "0.1.0"
-source = { git = "https://github.com/thegridelectric/optimal-flexibility?tag=v0.1.0%2Bgw1#68029d7ea11b075809772b66d5a154eb33339007" }
+source = { editable = "../optimal-flexibility" }
 dependencies = [
     { name = "matplotlib" },
     { name = "numpy" },
     { name = "pandas" },
     { name = "pydantic" },
 ]
+
+[package.metadata]
+requires-dist = [
+    { name = "matplotlib", specifier = ">=3.9" },
+    { name = "numpy", specifier = ">=2.5.2" },
+    { name = "pandas", specifier = ">=3.0.5" },
+    { name = "pydantic", specifier = ">=2" },
+]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=9.2.0" }]
 
 [[package]]
 name = "cffi"
@@ -237,7 +248,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "bruce-energy", marker = "extra == 'bruce'", git = "https://github.com/thegridelectric/optimal-flexibility?tag=v0.1.0%2Bgw1" },
+    { name = "bruce-energy", marker = "extra == 'bruce'", editable = "../optimal-flexibility" },
     { name = "gridworks-base", specifier = ">=0.6.2" },
     { name = "pydantic", specifier = ">=2.8.2" },
     { name = "pydantic-settings", specifier = ">=2.3.4" },

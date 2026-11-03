@@ -21,9 +21,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# The bruce optimizer, from its private repo. A deploy installs it
-# (`uv sync --frozen --extra bruce`); without it the service answers
-# alice and refuses bruce requests, which is what CI runs.
+# The bruce optimizer, installed editable from the sibling checkout
+# ../optimal-flexibility (`uv sync --frozen --extra bruce`); without it
+# the service answers alice and refuses bruce requests, which is what CI
+# runs.
 bruce = ["bruce-energy"]
 
 [project.scripts]
@@ -41,11 +42,10 @@ build-backend = "hatchling.build"
 packages = ["src/gwflo"]
 
 [tool.uv.sources]
-# bruce is pinned to a tag on the GridWorks fork of optimal-flexibility,
-# so the lock resolves anywhere and a box installs that exact optimizer.
-# To work on bruce itself: `uv pip install -e ../optimal-flexibility`
-# after `uv sync` (the next sync restores the pin).
-bruce-energy = { git = "https://github.com/thegridelectric/optimal-flexibility", tag = "v0.1.0+gw1" }
+# bruce runs editable from the sibling checkout of thdfw/optimal-flexibility,
+# on the laptop as on a box, so a bruce update is a pull of the sibling and
+# every recommendation records the sibling's commit.
+bruce-energy = { path = "../optimal-flexibility", editable = true }
 
 [dependency-groups]
 dev = [

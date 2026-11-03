@@ -17,6 +17,9 @@ jobs:
         with:
           python-version: "3.12"
           enable-cache: true
+      # bruce is the editable sibling checkout ../optimal-flexibility, so
+      # the lock resolves only with it beside the repo.
+      - run: git clone --depth 1 https://github.com/thdfw/optimal-flexibility ../optimal-flexibility
       - run: uv sync --all-groups --locked
       - name: Ruff lint
         run: uv run ruff check .
@@ -55,6 +58,9 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
           enable-cache: true
+      # bruce is the editable sibling checkout ../optimal-flexibility, so
+      # the lock resolves only with it beside the repo.
+      - run: git clone --depth 1 https://github.com/thdfw/optimal-flexibility ../optimal-flexibility
       - run: uv sync --all-groups --locked
       - name: Run tests
         run: uv run pytest

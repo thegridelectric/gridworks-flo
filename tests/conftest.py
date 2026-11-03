@@ -46,7 +46,7 @@ def sample(name: str) -> dict:
 
 def alice_request() -> FloParams:
     """The sample request, re-tuned to alice."""
-    request = FloParams.from_dict(sample("flo.params.000.json"))
+    request = FloParams.from_dict(sample("flo.params.001.json"))
     return request.model_copy(update={"tuning": FloTuningAlice()})
 
 
@@ -54,7 +54,7 @@ def oak_bruce_request() -> FloParams:
     """The sample request at oak's live plant shape: one tank, nine
     sensors, 120 gallons, the shape whose transition matrix the laptop and
     the LTN boxes cache as ``heat_pump_water_tank_2b6a76e0``."""
-    request = sample("flo.params.000.json")
+    request = sample("flo.params.001.json")
     request.update(
         TempSensorsPerTank=9,
         MaxTankTempF=160.0,

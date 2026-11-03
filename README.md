@@ -52,15 +52,15 @@ and logged.
 ## Run
 
 ```shell
-uv sync --all-groups --all-extras   # --extra bruce fetches the optimal-flexibility fork over https
+uv sync --all-groups --all-extras   # --extra bruce installs the sibling ../optimal-flexibility editable
 cp template.env .env                # and fill in
 uv run gwflo rabbit
 ```
 
-bruce is pinned to one tag of `thegridelectric/optimal-flexibility` in
-`pyproject.toml`. To run against a local bruce checkout instead, after the
-sync: `uv pip install -e ../optimal-flexibility`; the next `uv sync` puts the
-pin back.
+bruce is the sibling checkout `../optimal-flexibility`
+(`thdfw/optimal-flexibility`), installed editable, so a bruce update is a
+pull of the sibling. CI clones the sibling beside the checkout and runs
+without the extra.
 
 `./ci.sh` is the gate: ruff, pyright, pytest. The broker tests need the
 gwbase dev broker (`gw-dev-rabbit`: AMQP on 5672, MQTT on 1885) and
