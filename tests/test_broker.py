@@ -1,6 +1,8 @@
-"""Against the real dev broker, across the MQTT seam the LTN uses: a
-flo.params published on the MQTT door comes back as a flo.recommendation
-on the topic an LTN would subscribe to. Self-skips without a broker."""
+"""Against the real dev broker, both ways an LTN reaches the FLO: a
+flo.params sent direct over the LeafTransactiveNode-to-Flo edge comes
+back as a flo.recommendation direct on the LTN's queue, and one published
+wrapped on the MQTT door comes back wrapped on the topic an MQTT-native
+LTN subscribes to. Self-skips without a broker."""
 
 from __future__ import annotations
 
@@ -9,7 +11,14 @@ import time
 from queue import Empty, Queue
 
 import paho.mqtt.client as mqtt
+import pika
 import pytest
+from gwbase.transport_encoding import (
+    MessageCategory,
+    TransportClass,
+    json_direct_routing_key,
+    routing_code,
+)
 from gwbase.wrapped import wrap_bytes
 from paho.mqtt.enums import CallbackAPIVersion
 
@@ -20,6 +29,7 @@ from gwflo.sema.types import FloParams
 from tests.conftest import alice_request, broker_up, bruce_can_build, oak_bruce_request
 
 MQTT_PORT = 1885
+AMQP_URL = "amqp://smqPublic:smqPublic@localhost:5672/d1__1"
 
 
 def wait_for(predicate, timeout_s: float, what: str) -> None:
@@ -73,6 +83,73 @@ def round_trip(settings: GwfloSettings, request: FloParams, timeout_s: float) ->
         actor.stop()
         client.loop_stop()
         client.disconnect()
+
+
+def round_trip_direct(
+    settings: GwfloSettings, request: FloParams, timeout_s: float
+) -> dict:
+    """Send the request direct on the LTN's mic exchange, as a gwbase LTN
+    does, and return the flo.recommendation that reaches the LTN's queue
+    on its class exchange."""
+    ltn = request.g_node_alias
+    ltn_code = routing_code(TransportClass.LeafTransactiveNode)
+    flo_code = routing_code(TransportClass.Flo)
+    connection = pika.BlockingConnection(pika.URLParameters(AMQP_URL))
+    channel = connection.channel()
+    queue = channel.queue_declare(queue="", exclusive=True).method.queue
+    channel.queue_bind(
+        queue,
+        f"{ltn_code}_tx",
+        routing_key=f"{MessageCategory.JsonDirect.value}.*.*.*.*.{ltn.replace('.', '-')}",
+    )
+    actor = FloActor(settings=settings, pool=BuildPool(1))
+    actor.start()
+    try:
+        wait_for(lambda: actor.consuming, 15, "the actor to consume")
+        channel.basic_publish(
+            exchange=f"{ltn_code}mic_tx",
+            routing_key=json_direct_routing_key(
+                from_alias=ltn,
+                from_class_token=ltn_code,
+                type_name="flo.params",
+                to_class_token=flo_code,
+                to_alias=settings.service_alias,
+            ),
+            body=request.to_bytes(),
+        )
+        deadline = time.time() + timeout_s
+        method = body = None
+        while method is None:
+            if time.time() > deadline:
+                raise AssertionError("no flo.recommendation came back on the edge")
+            method, _properties, body = channel.basic_get(queue, auto_ack=True)
+            if method is None:
+                time.sleep(0.2)
+        assert body is not None
+        assert method.routing_key == json_direct_routing_key(
+            from_alias=settings.service_alias,
+            from_class_token=flo_code,
+            type_name="flo.recommendation",
+            to_class_token=ltn_code,
+            to_alias=ltn,
+        )
+        payload = json.loads(body)
+        assert payload["TypeName"] == "flo.recommendation"
+        assert payload["BidderAlias"] == ltn
+        assert payload["OptimalPathList"][0]["StartUnixS"] == request.start_unix_s
+        assert actor.answered == 1
+        return payload
+    finally:
+        actor.stop()
+        connection.close()
+
+
+@pytest.mark.broker
+def test_alice_request_over_the_edge_is_answered(settings: GwfloSettings) -> None:
+    if not broker_up(5672):
+        pytest.skip("no dev broker on localhost:5672")
+    payload = round_trip_direct(settings, alice_request(), timeout_s=30)
+    assert payload["FloName"] == "alice"
 
 
 @pytest.mark.broker

@@ -22,17 +22,20 @@ and publishes the reply. Nothing is kept between requests.
 The two repos share the vocabulary and no Python types: the request
 crosses to bruce as bytes and the reply comes back as bytes.
 
-## The seam
+## The two ways in
 
-The LTN speaks MQTT; this actor speaks AMQP. They meet on the broker's
-`amq.topic`:
+The actor hears `flo.params` two ways and answers each in kind.
 
-- request: the LTN publishes a wrapped `flo.params` on
+- Direct, the native way: a gwbase LTN sends `flo.params` over the
+  LeafTransactiveNode-to-Flo edge of the class fabric, addressed to this
+  FLO by alias, and the `flo.recommendation` goes back direct over the
+  edge to the bidder.
+- Wrapped, across the MQTT seam: an LTN still inside gridworks-scada
+  publishes a wrapped `flo.params` on
   `gw/<ltn-alias-hyphenated>/to/flo/flo-params`; the actor's queue is
-  bound to `gw.*.to.flo.flo-params`.
-- reply: the actor publishes a wrapped `flo.recommendation` on
-  `gw.<flo-alias-hyphenated>.to.ltn.flo-recommendation`, which the LTN
-  hears as `gw/<flo-alias-hyphenated>/to/ltn/flo-recommendation`.
+  bound to `gw.*.to.flo.flo-params` on `amq.topic`, and the reply goes
+  back wrapped on `gw.<flo-alias-hyphenated>.to.ltn.flo-recommendation`.
+  This binding goes once the LTN has fully moved out of gridworks-scada.
 
 No correlation id: the reply names the bidder (`BidderAlias`) and the
 slot (every path's `StartUnixS`), and the LTN keeps only the reply for

@@ -206,7 +206,7 @@ wheels = [
 
 [[package]]
 name = "gridworks-base"
-version = "0.7.1"
+version = "0.7.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cryptography" },
@@ -216,9 +216,9 @@ dependencies = [
     { name = "python-dotenv" },
     { name = "xdg" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/fb/46/f2f794a7ff0373fc703614b161845bd47164164b655df4e2c704ec8a77e3/gridworks_base-0.7.1.tar.gz", hash = "sha256:6a207c9a1f75a6f9481984afd9dacf03727217fe8154ec04b5ed93d07e419168", size = 166121, upload-time = "2026-11-04T08:14:25.404Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/db/f0/facac21db2029d6a225299a02342ea99e71e8c03d1cefcd9d3983f75d188/gridworks_base-0.7.2.tar.gz", hash = "sha256:ada1dfd3cd0b3bcf167a85fe2af2edc162baf88fcfebbbf88bc3414041f0c2cb", size = 166165, upload-time = "2026-11-04T08:52:53.618Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4f/77/794c3584df29c585b20549b0f5534925bba1153a25df5459311fa3f83f4b/gridworks_base-0.7.1-py3-none-any.whl", hash = "sha256:89f5af75332e59f0b54d27717c7347efd53998e5292e1119c2b01192c0b42eef", size = 100493, upload-time = "2026-11-04T08:14:24.175Z" },
+    { url = "https://files.pythonhosted.org/packages/af/18/ae858ba25b4f1bf6f31730971cf98ae1a99d515788190f7d8d3c474d674c/gridworks_base-0.7.2-py3-none-any.whl", hash = "sha256:d370d95b5c5e44f1dc6e2f7b6e70b77d78d1ad4314bfc2bba836faeda116ca2d", size = 100498, upload-time = "2026-11-04T08:52:51.885Z" },
 ]
 
 [[package]]
@@ -249,7 +249,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "bruce-energy", marker = "extra == 'bruce'", editable = "../optimal-flexibility" },
-    { name = "gridworks-base", specifier = ">=0.7.1" },
+    { name = "gridworks-base", specifier = ">=0.7.2" },
     { name = "pydantic", specifier = ">=2.8.2" },
     { name = "pydantic-settings", specifier = ">=2.3.4" },
     { name = "python-dotenv", specifier = ">=1.0.0" },
