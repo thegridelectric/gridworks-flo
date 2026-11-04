@@ -70,5 +70,7 @@ is generated: edit `src/gwflo/sema_seed_request.yaml` and run
 
 ## Deploy
 
-One login `flo`, one unit `service/flo-rabbit.service`, one FIS
-principal. The checkout on the box is a pushed `main` SHA.
+One login `flo`, one unit `service/flo-rabbit.service`, one GNode: the
+registry row `<universe>.flo`, its `g.node.gt.json` on the box and the
+FIS principal whose cert CN is that GNodeId. The checkout on the box is
+a pushed `main` SHA.

@@ -1,45 +1,19 @@
 name: Tests
 
 on:
-  - push
-  - pull_request
+  push:
+  pull_request:
 
 jobs:
-  lint:
-    name: lint / 3.12
+  ci:
+    name: ci / 3.12
     runs-on: ubuntu-latest
-    env:
-      FORCE_COLOR: "1"
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v6
-        with:
-          python-version: "3.12"
-          enable-cache: true
-      # bruce is the editable sibling checkout ../optimal-flexibility, so
-      # the lock resolves only with it beside the repo.
-      - run: git clone --depth 1 https://github.com/thdfw/optimal-flexibility ../optimal-flexibility
-      - run: uv sync --all-groups --locked
-      - name: Ruff lint
-        run: uv run ruff check .
-      - name: Ruff format check
-        run: uv run ruff format --check .
-      - name: Pyright
-        run: uv run pyright
-
-  tests:
-    name: tests / ${{ matrix.python }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python: ["3.12", "3.13"]
     env:
       FORCE_COLOR: "1"
     services:
-      # Same baked multi-arch image as gridworks-base's dev broker, so this
-      # repo runs against the exact RabbitMQ + topology developers use.
+      # The same baked multi-arch image as the dev broker (gridworks-base
+      # arm.sh / x86.sh), so CI runs against the exact RabbitMQ + topology
+      # developers use.
       rabbit:
         image: ghcr.io/thegridelectric/dev-rabbit:latest
         ports:
@@ -52,15 +26,17 @@ jobs:
           --health-timeout 10s
           --health-retries 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+
       - name: Install uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v7
         with:
-          python-version: ${{ matrix.python }}
+          python-version: "3.12"
           enable-cache: true
+
       # bruce is the editable sibling checkout ../optimal-flexibility, so
       # the lock resolves only with it beside the repo.
       - run: git clone --depth 1 https://github.com/thdfw/optimal-flexibility ../optimal-flexibility
-      - run: uv sync --all-groups --locked
-      - name: Run tests
-        run: uv run pytest
+
+      - name: Run ci.sh
+        run: ./ci.sh

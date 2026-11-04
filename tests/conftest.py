@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import socket
+import uuid
 from pathlib import Path
 
 import pytest
@@ -15,10 +16,28 @@ from gwflo.sema.types import FloParams, FloTuningAlice
 SAMPLES = Path(__file__).resolve().parents[1] / "src" / "gwflo" / "sema" / "samples"
 
 
+def g_node_file(tmp_path: Path, alias: str) -> Path:
+    """The FLO's GNode identity as provisioning writes it."""
+    path = tmp_path / "g.node.gt.json"
+    path.write_text(
+        json.dumps({
+            "TypeName": "g.node.gt",
+            "Version": "006",
+            "GNodeId": str(uuid.uuid4()),
+            "Alias": alias,
+            "BaseClass": "Logical",
+            "GNodeClass": "Flo",
+            "Status": "Active",
+        })
+    )
+    return path
+
+
 @pytest.fixture(autouse=True)
 def xdg_tmp(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     for var in ("XDG_CONFIG_HOME", "XDG_DATA_HOME", "XDG_STATE_HOME"):
         monkeypatch.setenv(var, str(tmp_path / var.lower()))
+    monkeypatch.setenv("GWFLO_G_NODE_PATH", str(g_node_file(tmp_path, "d1.flo")))
     monkeypatch.setenv("GWFLO_SUPER_ALIAS", "d1.super1")
     monkeypatch.setenv("GWFLO_TIME_COORDINATOR_ALIAS", "d1.time")
     monkeypatch.setenv("GWFLO_WORKERS", "1")

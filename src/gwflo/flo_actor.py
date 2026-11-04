@@ -8,6 +8,9 @@ the `flo.recommendation` back across the seam as a wrapped message
 request by BidderAlias and the first path's StartUnixS, so no correlation
 id travels. A reply older than the deadline is dropped: the LTN has bid
 without it. Nothing is kept between requests.
+
+The actor is a GNode: its `g.node.gt.json` names the registry row an LTN
+finds by walking the forest from itself up to the universe root.
 """
 
 from __future__ import annotations
@@ -18,7 +21,8 @@ import time
 from concurrent.futures import Future
 from concurrent.futures.process import BrokenProcessPool
 
-from gwbase.orchestrator import Orchestrator
+from gwbase.gridworks_actor import GridworksActor
+from gwbase.sema.enums import GwGNodeClass
 from gwbase.sema.types.gridworks_header import GridworksHeader
 from gwbase.transport_encoding import RoutingEnvelope, TransportClass, routing_code
 from gwbase.wrapped import wrap_bytes
@@ -40,11 +44,11 @@ def request_binding_key() -> str:
     )
 
 
-class FloActor(Orchestrator):
+class FloActor(GridworksActor):
     def __init__(self, *, settings: GwfloSettings, pool: BuildPool) -> None:
         super().__init__(
             settings=settings,
-            transport_class=TransportClass.Flo,
+            g_node_class=GwGNodeClass.Flo,
             my_super_alias=settings.super_alias,
             my_time_coordinator_alias=settings.time_coordinator_alias,
         )

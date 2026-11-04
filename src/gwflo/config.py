@@ -1,17 +1,18 @@
 """Settings for gridworks-flo."""
 
-from gwbase.config import ServiceSettings
+from gwbase.config import GNodeSettings
 from gwbase.transport_format import LeftRightDot
 from pydantic_settings import SettingsConfigDict
 
 
-class GwfloSettings(ServiceSettings):
+class GwfloSettings(GNodeSettings):
     """Reads from env (GWFLO_*) and/or a `.env` file at the repo root.
 
-    Inherits `rabbit: RabbitBrokerClient`, `log_level` and the rest of
-    `ServiceSettings`. The FLO service is a service, not a GNode: no
-    identity file, and `service_alias` is `<universe>.flo` under the
-    universe root.
+    Inherits `rabbit: RabbitBrokerClient`, `g_node_path`, `log_level` and
+    the rest of `ServiceSettings` from `GNodeSettings`. The FLO is a
+    GNode: `service_alias` MUST match the Alias in its `g.node.gt.json`,
+    which `GridworksActor` enforces at boot. The universe-level FLO is
+    `<universe>.flo` under the universe root.
     """
 
     service_alias: LeftRightDot = "d1.flo"
