@@ -1,6 +1,6 @@
 metadata:
   registry_version: "1.0"
-  last_updated: "2026-11-02T18:20:00Z"
+  last_updated: "2026-11-06T20:20:00Z"
   maintainer: "gridworks-energy"
 
 formats:
@@ -61,6 +61,18 @@ formats:
     description: "Canonical lowercase UUIDv4 string (RFC 4122) in 8-4-4-4-12 format"
 
 enums:
+  flo.refusal.reason:
+    latest_version: "000"
+    owner: gridworks-energy
+    enum_type: "versioned"
+    description: "Why a FLO service did not answer a flo.params request with a recommendation, carried on flo.refusal."
+
+    versions:
+      "000":
+        schema_url: "https://schemas.electricity.works/enums/flo.refusal.reason/000"
+        created: "2026-11-06T20:20:00Z"
+        status: "published"
+
   gw1.seasonal.storage.mode:
     latest_version: "000"
     owner: gridworks-energy
@@ -161,6 +173,26 @@ types:
             - "non.empty.string"
             - "price.quantity.unitless:001"
             - "utc.milliseconds"
+
+  flo.refusal:
+    latest_version: "000"
+    owner: gridworks-energy
+    versioning_strategy: "literal"
+    description: "A FLO service's answer to one flo.params request it cannot serve: the bidder and slot it was for and the reason there is no recommendation; sent in place of flo.recommendation."
+
+    versions:
+      "000":
+        schema_url: "https://schemas.electricity.works/types/flo.refusal/000"
+        created: "2026-11-06T20:20:00Z"
+        status: "published"
+        summary: "BidderAlias and StartUnixS pair the refusal with its request as the recommendation does; Reason (flo.refusal.reason), optional Detail, CreatedMs."
+        direct_dependencies:
+          structural:
+            - "flo.refusal.reason:000"
+            - "left.right.dot"
+            - "non.empty.string"
+            - "utc.milliseconds"
+            - "utc.seconds"
 
   flo.tuning.alice:
     latest_version: "000"

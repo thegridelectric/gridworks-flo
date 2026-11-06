@@ -15,7 +15,7 @@ RestartSec=1
 # (2 GB each) with margin; a build past the cap is killed and the unit
 # keeps serving.
 MemoryMax=6G
-# A build in flight finishes or the pool is torn down: give stop time.
+# A build in flight finishes before the service stops: give stop time.
 TimeoutStopSec=90
 
 [Install]
