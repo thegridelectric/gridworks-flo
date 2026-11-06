@@ -7,20 +7,32 @@ import argparse
 import logging
 import sys
 import time
+from zoneinfo import ZoneInfo
 
 import dotenv
+from gwbase.logging_setup import HumanFormatter
 
 from gwflo.config import GwfloSettings
 from gwflo.flo_actor import FloActor
 from gwflo.pool import BuildPool
 
 
+class LoggerNameAsAlias(logging.Filter):
+    """On the stdout stream the alias slot of the gwbase line names the
+    logger (``gwflo.pool``), since these records come from no actor."""
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        record.service_alias = record.name
+        return True
+
+
 def run_rabbit(settings: GwfloSettings) -> None:
-    logging.basicConfig(
-        level=settings.log_level.upper(),
-        stream=sys.stdout,
-        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-    )
+    # The stdout stream (journald) in the same line format and zone as the
+    # actor's file log, so the two agree on the hour.
+    stdout = logging.StreamHandler(sys.stdout)
+    stdout.setFormatter(HumanFormatter(ZoneInfo(settings.log_tz)))
+    stdout.addFilter(LoggerNameAsAlias())
+    logging.basicConfig(level=settings.log_level.upper(), handlers=[stdout])
     actor = FloActor(
         settings=settings,
         pool=BuildPool(settings.workers, timeout_s=settings.reply_deadline_s),
