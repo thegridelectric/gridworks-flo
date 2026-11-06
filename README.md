@@ -9,7 +9,7 @@ clears; the bidder picks the cleared pair off the recommendation it holds.
 
 This service is the broker face for every FLO a GridWorks LTN can name:
 one actor (`gwflo rabbit`) hears requests, dispatches on the request's
-`Tuning` TypeName, runs the build in a bounded pool of worker processes
+`Tuning` TypeName, runs the build in a subprocess of its own, at most `GWFLO_WORKERS` at once,
 and publishes the reply. Nothing is kept between requests.
 
 ## The FLOs
@@ -44,11 +44,13 @@ dropped rather than sent.
 
 ## Workers and memory
 
-Each build runs in a process that exits when done, so the OS reclaims the
-graph. `GWFLO_WORKERS` builds run at once and the rest queue. The unit's
-`MemoryMax` is sized for that many builds at the largest plant shape; a
-build past it is killed, the pool replaces the worker, and the request
-is logged as lost. bruce's transition matrices are never built in the
+Each build is a subprocess (`python -m gwflo.build`, the request on
+stdin, the reply on stdout) that exits when done, so the OS reclaims the
+graph. `GWFLO_WORKERS` builds run at once and the rest queue. The worker
+shares nothing with the service but its pipes. The unit's `MemoryMax` is
+sized for that many builds at the largest plant shape; a build past it,
+or one still running at `GWFLO_REPLY_DEADLINE_S`, is killed and the
+request is logged as lost. bruce's transition matrices are never built in the
 request path: a request whose plant shape has no cached matrix is refused
 and logged.
 

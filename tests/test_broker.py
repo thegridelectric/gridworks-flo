@@ -55,7 +55,7 @@ def round_trip(settings: GwfloSettings, request: FloParams, timeout_s: float) ->
     client.subscribe(f"gw/{flo_lrh}/to/ltn/flo-recommendation")
     client.loop_start()
 
-    actor = FloActor(settings=settings, pool=BuildPool(1))
+    actor = FloActor(settings=settings, pool=BuildPool(1, timeout_s=60))
     actor.start()
     try:
         wait_for(lambda: actor.consuming, 15, "the actor to consume")
@@ -102,7 +102,7 @@ def round_trip_direct(
         f"{ltn_code}_tx",
         routing_key=f"{MessageCategory.JsonDirect.value}.*.*.*.*.{ltn.replace('.', '-')}",
     )
-    actor = FloActor(settings=settings, pool=BuildPool(1))
+    actor = FloActor(settings=settings, pool=BuildPool(1, timeout_s=60))
     actor.start()
     try:
         wait_for(lambda: actor.consuming, 15, "the actor to consume")

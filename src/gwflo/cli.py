@@ -21,7 +21,10 @@ def run_rabbit(settings: GwfloSettings) -> None:
         stream=sys.stdout,
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
-    actor = FloActor(settings=settings, pool=BuildPool(settings.workers))
+    actor = FloActor(
+        settings=settings,
+        pool=BuildPool(settings.workers, timeout_s=settings.reply_deadline_s),
+    )
     actor.start()
     try:
         while actor.main_loop_running:

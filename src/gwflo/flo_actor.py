@@ -24,7 +24,6 @@ import json
 import logging
 import time
 from concurrent.futures import Future
-from concurrent.futures.process import BrokenProcessPool
 
 from gwbase.gridworks_actor import GridworksActor
 from gwbase.sema.enums import GwGNodeClass
@@ -33,7 +32,7 @@ from gwbase.transport_encoding import RoutingEnvelope, TransportClass, routing_c
 from gwbase.wrapped import wrap_bytes
 
 from gwflo.config import GwfloSettings
-from gwflo.pool import BuildPool
+from gwflo.pool import BuildLost, BuildPool, BuildRefused
 from gwflo.sema.types import FloParams, FloRecommendation
 
 LOGGER = logging.getLogger(__name__)
@@ -106,15 +105,14 @@ class FloActor(GridworksActor):
     ) -> None:
         try:
             reply_bytes = future.result()
-        except BrokenProcessPool:
+        except BuildLost as e:
             self.logger.error(
-                f"Build for {request.g_node_alias} slot {request.start_unix_s} lost: "
-                "worker died"
+                f"Build for {request.g_node_alias} slot {request.start_unix_s} lost: {e}"
             )
             return
-        except Exception as e:  # noqa: BLE001 -- a refused request is reported, not fatal
+        except BuildRefused as e:
             self.logger.error(
-                f"Build for {request.g_node_alias} slot {request.start_unix_s} refused: {e}"
+                f"Build for {request.g_node_alias} slot {request.start_unix_s} refused:\n{e}"
             )
             return
         age_s = time.time() - received_s

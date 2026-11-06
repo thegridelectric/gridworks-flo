@@ -24,9 +24,10 @@ class GwfloSettings(GNodeSettings):
     super_alias: LeftRightDot
     time_coordinator_alias: LeftRightDot
 
-    # The worker pool: builds that run at once (the box is sized for this
+    # The build workers: builds that run at once (the box is sized for this
     # many all-tanks peaks) and the age past which a reply is dropped
-    # instead of sent, since the LTN has bid without it by then.
+    # instead of sent, since the LTN has bid without it by then; a build
+    # still running at that age is killed.
     workers: int
     reply_deadline_s: float
 
