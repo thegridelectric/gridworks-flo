@@ -24,6 +24,11 @@ types:
     versioning_strategy: literal
     versions:
       '000': definitions/types/flo.recommendation/000.yaml
+  flo.refusal:
+    latest_version: '000'
+    versioning_strategy: literal
+    versions:
+      '000': definitions/types/flo.refusal/000.yaml
   flo.tuning.alice:
     latest_version: '000'
     versioning_strategy: literal
@@ -40,6 +45,11 @@ types:
     versions:
       '001': definitions/types/price.quantity.unitless/001.yaml
 enums:
+  flo.refusal.reason:
+    enum_type: versioned
+    latest_version: '000'
+    versions:
+      '000': definitions/enums/flo.refusal.reason/000.yaml
   gw1.seasonal.storage.mode:
     enum_type: versioned
     latest_version: '000'

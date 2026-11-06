@@ -83,6 +83,14 @@ def oak_bruce_request() -> FloParams:
     return FloParams.from_dict(request)
 
 
+def bruce_installed() -> bool:
+    try:
+        import bruce  # noqa: F401, PLC0415  # pyright: ignore[reportMissingImports]
+    except ImportError:
+        return False
+    return True
+
+
 def bruce_can_build(request: FloParams) -> bool:
     """True when the bruce extra is installed and the request's plant shape
     has a cached transition matrix here. The request crosses into bruce as

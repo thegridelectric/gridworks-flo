@@ -9,8 +9,8 @@ import sys
 import pytest
 
 from gwflo.pool import BuildLost, BuildPool, BuildRefused
-from gwflo.sema.types import FloRecommendation, FloTuningBruce
-from tests.conftest import alice_request, sample
+from gwflo.sema.types import FloRecommendation
+from tests.conftest import alice_request
 
 
 def test_a_build_answers_over_the_pipes() -> None:
@@ -26,16 +26,13 @@ def test_a_build_answers_over_the_pipes() -> None:
 
 
 def test_a_build_that_raises_is_refused_with_its_stderr() -> None:
-    request = alice_request().model_copy(
-        update={"tuning": FloTuningBruce.from_dict(sample("flo.tuning.bruce.001.json"))}
-    )
-    pool = BuildPool(1, timeout_s=60)
+    raising = (sys.executable, "-c", "raise ValueError('bad tank')")
+    pool = BuildPool(1, timeout_s=60, argv=raising)
     try:
-        with pytest.raises(BuildRefused) as refused:
-            pool.submit(request.to_bytes()).result()
+        with pytest.raises(BuildRefused, match="ValueError: bad tank"):
+            pool.submit(b"{}").result()
     finally:
         pool.shutdown()
-    assert "Error" in str(refused.value)
 
 
 def test_a_killed_worker_is_a_lost_build() -> None:

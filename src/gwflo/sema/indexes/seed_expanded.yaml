@@ -1,10 +1,11 @@
 metadata:
   generated_from: indexes/public_registry.yaml
-  generated_at: '2026-11-03T14:29:54Z'
+  generated_at: '2026-11-06T20:34:11Z'
   note: Transitive closure of initial_targets
 initial_targets:
 - flo.params:001
 - flo.recommendation:000
+- flo.refusal:000
 worklist:
   formats:
     git.commit:
@@ -24,6 +25,9 @@ worklist:
     uuid4.str:
       path: definitions/formats/uuid4.str.yaml
   enums:
+    flo.refusal.reason:
+      '000':
+        path: definitions/enums/flo.refusal.reason/000.yaml
     gw1.seasonal.storage.mode:
       '000':
         path: definitions/enums/gw1.seasonal.storage.mode/000.yaml
@@ -43,6 +47,9 @@ worklist:
     flo.recommendation:
       '000':
         path: definitions/types/flo.recommendation/000.yaml
+    flo.refusal:
+      '000':
+        path: definitions/types/flo.refusal/000.yaml
     flo.tuning.alice:
       '000':
         path: definitions/types/flo.tuning.alice/000.yaml

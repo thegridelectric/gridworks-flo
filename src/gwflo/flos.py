@@ -13,11 +13,12 @@ from __future__ import annotations
 import time
 from collections.abc import Callable
 
-from gwflo.sema.enums import MarketPriceUnit, MarketQuantityUnit
+from gwflo.sema.enums import FloRefusalReason, MarketPriceUnit, MarketQuantityUnit
 from gwflo.sema.types import (
     FloOptimalPath,
     FloParams,
     FloRecommendation,
+    FloRefusal,
     FloTuningAlice,
     FloTuningBruce,
     PriceQuantityUnitless,
@@ -83,10 +84,40 @@ FLOS: dict[str, Flo] = {
 }
 
 
+def refusal(request: FloParams, reason: FloRefusalReason, detail: str) -> FloRefusal:
+    return FloRefusal(
+        bidder_alias=request.g_node_alias,
+        start_unix_s=request.start_unix_s,
+        reason=reason,
+        detail=detail or None,
+        created_ms=int(time.time() * 1000),
+    )
+
+
 def run(request_bytes: bytes) -> bytes:
     """What a worker runs: decode the request, dispatch on its Tuning
-    TypeName, encode the reply. Bytes at both ends so the pool moves
-    nothing but JSON between processes."""
+    TypeName, encode the answer. Bytes at both ends so the pool moves
+    nothing but JSON between processes. The answer is the recommendation,
+    or a refusal when the service has no optimizer for the tuning or no
+    model for the plant; a build that raises propagates, and the parent
+    refuses it from the worker's stderr."""
     request = FloParams.from_bytes(request_bytes)
-    flo = FLOS[request.tuning.type_name]
-    return flo(request).to_bytes()
+    tuning = request.tuning.type_name
+    flo = FLOS.get(tuning)
+    if flo is None:
+        return refusal(
+            request, FloRefusalReason.NoTuning, f"no optimizer for {tuning}"
+        ).to_bytes()
+    try:
+        return flo(request).to_bytes()
+    except ImportError as e:
+        return refusal(
+            request, FloRefusalReason.NoTuning, f"{tuning} not installed: {e}"
+        ).to_bytes()
+    except RuntimeError as e:
+        # bruce raises a plain RuntimeError for a plant shape with no cached
+        # matrix (transitions_matrix.py); a typed error there retires this
+        # text match.
+        if "transition matrix" not in str(e):
+            raise
+        return refusal(request, FloRefusalReason.NoMatrix, str(e)).to_bytes()

@@ -37,10 +37,14 @@ The actor hears `flo.params` two ways and answers each in kind.
   back wrapped on `gw.<flo-alias-hyphenated>.to.ltn.flo-recommendation`.
   This binding goes once the LTN has fully moved out of gridworks-scada.
 
-No correlation id: the reply names the bidder (`BidderAlias`) and the
-slot (every path's `StartUnixS`), and the LTN keeps only the reply for
-the slot it is bidding. A reply older than `GWFLO_REPLY_DEADLINE_S` is
-dropped rather than sent.
+No correlation id: the answer names the bidder (`BidderAlias`) and the
+slot (`StartUnixS`), and the LTN keeps only the answer for the slot it
+is bidding. A request the service cannot serve is answered with a
+`flo.refusal` in place of the recommendation, in the same kind, with a
+`Reason`: no optimizer for the tuning, no cached matrix for the plant
+shape, a build that raised, a worker lost under it, or a recommendation
+built later than `GWFLO_REPLY_DEADLINE_S`, which the LTN has bid
+without by then.
 
 ## Workers and memory
 
