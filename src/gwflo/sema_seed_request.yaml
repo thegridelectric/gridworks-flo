@@ -12,7 +12,7 @@ initial_targets:
     flo.params:
       versions: ["001"]
     flo.recommendation:
-      versions: ["000"]
+      versions: ["001"]
     flo.refusal:
       versions: ["000"]
 
