@@ -39,6 +39,8 @@ echo "==> seed:      ${SEED}"
 echo "==> package:   ${PACKAGE_NAME}"
 
 cd "${SEMA_REPO}"
+# Published-only: a seed that reaches a staging word fails here rather
+# than shipping a dev-only snapshot.
 echo "==> sema snapshot prepare"
 uv run sema snapshot prepare "${SEED}"
 echo "==> sema snapshot build --package-name ${PACKAGE_NAME}"
