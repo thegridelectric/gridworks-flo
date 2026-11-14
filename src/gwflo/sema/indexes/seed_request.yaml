@@ -10,7 +10,7 @@
 initial_targets:
   types:
     flo.params:
-      versions: ["001"]
+      versions: ["002"]
     flo.recommendation:
       versions: ["001"]
     flo.refusal:
