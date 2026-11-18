@@ -1,10 +1,10 @@
 metadata:
   generated_from: indexes/public_registry.yaml
-  generated_at: '2026-11-14T22:43:15Z'
+  generated_at: '2026-11-18T15:15:57Z'
   note: Transitive closure of initial_targets
 initial_targets:
-- flo.params:002
-- flo.recommendation:001
+- flo.params:003
+- flo.recommendation:002
 - flo.refusal:000
 worklist:
   formats:
@@ -42,14 +42,14 @@ worklist:
       '000':
         path: definitions/types/flo.optimal.path/000.yaml
     flo.params:
-      '002':
-        path: definitions/types/flo.params/002.yaml
+      '003':
+        path: definitions/types/flo.params/003.yaml
     flo.path.penalties.bruce:
-      '000':
-        path: definitions/types/flo.path.penalties.bruce/000.yaml
-    flo.recommendation:
       '001':
-        path: definitions/types/flo.recommendation/001.yaml
+        path: definitions/types/flo.path.penalties.bruce/001.yaml
+    flo.recommendation:
+      '002':
+        path: definitions/types/flo.recommendation/002.yaml
     flo.refusal:
       '000':
         path: definitions/types/flo.refusal/000.yaml
@@ -60,8 +60,8 @@ worklist:
       '000':
         path: definitions/types/flo.tuning.alice/000.yaml
     flo.tuning.bruce:
-      '001':
-        path: definitions/types/flo.tuning.bruce/001.yaml
+      '002':
+        path: definitions/types/flo.tuning.bruce/002.yaml
     price.quantity.unitless:
       '001':
         path: definitions/types/price.quantity.unitless/001.yaml
