@@ -5,28 +5,28 @@ types:
   flo.optimal.path:
     '000':
       used_by:
-      - flo.params:003
-      - flo.recommendation:002
+      - flo.params:004
+      - flo.recommendation:003
   flo.path.penalties.bruce:
-    '001':
+    '002':
       used_by:
-      - flo.recommendation:002
+      - flo.recommendation:003
   flo.tank.store.path:
     '000':
       used_by:
-      - flo.recommendation:002
+      - flo.recommendation:003
   flo.tuning.alice:
     '000':
       used_by:
-      - flo.params:003
+      - flo.params:004
   flo.tuning.bruce:
-    '002':
+    '003':
       used_by:
-      - flo.params:003
+      - flo.params:004
   price.quantity.unitless:
     '001':
       used_by:
-      - flo.recommendation:002
+      - flo.recommendation:003
 enums:
   flo.refusal.reason:
     '000':
@@ -35,47 +35,47 @@ enums:
   gw1.seasonal.storage.mode:
     '000':
       used_by:
-      - flo.params:003
+      - flo.params:004
   market.price.unit:
     '000':
       used_by:
-      - flo.recommendation:002
+      - flo.recommendation:003
   market.quantity.unit:
     '000':
       used_by:
-      - flo.recommendation:002
+      - flo.recommendation:003
 formats:
   git.commit:
     used_by:
-    - flo.recommendation:002
+    - flo.recommendation:003
   left.right.dot:
     used_by:
-    - flo.params:003
-    - flo.recommendation:002
+    - flo.params:004
+    - flo.recommendation:003
     - flo.refusal:000
   non.empty.string:
     used_by:
-    - flo.recommendation:002
+    - flo.recommendation:003
     - flo.refusal:000
   non.negative.int:
     used_by:
-    - flo.tuning.bruce:002
+    - flo.tuning.bruce:003
   positive.int:
     used_by:
     - flo.optimal.path:000
-    - flo.params:003
+    - flo.params:004
     - flo.tank.store.path:000
-    - flo.tuning.bruce:002
+    - flo.tuning.bruce:003
   utc.milliseconds:
     used_by:
-    - flo.params:003
-    - flo.recommendation:002
+    - flo.params:004
+    - flo.recommendation:003
     - flo.refusal:000
   utc.seconds:
     used_by:
     - flo.optimal.path:000
-    - flo.params:003
+    - flo.params:004
     - flo.refusal:000
   uuid4.str:
     used_by:
-    - flo.params:003
+    - flo.params:004
