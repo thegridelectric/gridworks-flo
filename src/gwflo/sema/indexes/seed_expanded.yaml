@@ -1,9 +1,9 @@
 metadata:
   generated_from: indexes/public_registry.yaml
-  generated_at: '2026-11-24T02:03:09Z'
+  generated_at: '2026-11-24T19:19:42Z'
   note: Transitive closure of initial_targets
 initial_targets:
-- flo.params:004
+- flo.params:005
 - flo.recommendation:003
 - flo.refusal:000
 worklist:
@@ -42,8 +42,8 @@ worklist:
       '000':
         path: definitions/types/flo.optimal.path/000.yaml
     flo.params:
-      '004':
-        path: definitions/types/flo.params/004.yaml
+      '005':
+        path: definitions/types/flo.params/005.yaml
     flo.path.penalties.bruce:
       '002':
         path: definitions/types/flo.path.penalties.bruce/002.yaml

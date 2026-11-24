@@ -5,7 +5,7 @@ types:
   flo.optimal.path:
     '000':
       used_by:
-      - flo.params:004
+      - flo.params:005
       - flo.recommendation:003
   flo.path.penalties.bruce:
     '002':
@@ -18,11 +18,11 @@ types:
   flo.tuning.alice:
     '000':
       used_by:
-      - flo.params:004
+      - flo.params:005
   flo.tuning.bruce:
     '003':
       used_by:
-      - flo.params:004
+      - flo.params:005
   price.quantity.unitless:
     '001':
       used_by:
@@ -35,7 +35,7 @@ enums:
   gw1.seasonal.storage.mode:
     '000':
       used_by:
-      - flo.params:004
+      - flo.params:005
   market.price.unit:
     '000':
       used_by:
@@ -50,7 +50,7 @@ formats:
     - flo.recommendation:003
   left.right.dot:
     used_by:
-    - flo.params:004
+    - flo.params:005
     - flo.recommendation:003
     - flo.refusal:000
   non.empty.string:
@@ -63,19 +63,19 @@ formats:
   positive.int:
     used_by:
     - flo.optimal.path:000
-    - flo.params:004
+    - flo.params:005
     - flo.tank.store.path:000
     - flo.tuning.bruce:003
   utc.milliseconds:
     used_by:
-    - flo.params:004
+    - flo.params:005
     - flo.recommendation:003
     - flo.refusal:000
   utc.seconds:
     used_by:
     - flo.optimal.path:000
-    - flo.params:004
+    - flo.params:005
     - flo.refusal:000
   uuid4.str:
     used_by:
-    - flo.params:004
+    - flo.params:005
