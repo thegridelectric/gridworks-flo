@@ -10,12 +10,6 @@
 package_name: gwflo
 vendor_dir: sema
 
-# flo.params 005 is staging, so this branch allows it; any other staging
-# word the closure reaches fails the build. The allow block goes when 005
-# is promoted, and the branch then merges to main.
-staging:
-  allow: [flo.params]
-
 initial_targets:
   types:
     flo.params:
