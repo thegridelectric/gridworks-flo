@@ -18,6 +18,9 @@ step "uv sync (locked)" uv sync --all-groups --all-extras --locked
 step "ruff check" uv run ruff check --no-fix .
 step "ruff format --check" uv run ruff format --check .
 step "pyright" uv run pyright
+step "sema snapshot staging check" uv run python -P \
+  src/gwflo/sema/check_staging.py src/gwflo/sema_seed_request.yaml \
+  --deploy-branch main
 
 if ! nc -z localhost 5672 2>/dev/null; then
   echo "NOTE: no broker on localhost:5672 — broker tests will self-skip."
