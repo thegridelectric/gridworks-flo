@@ -11,11 +11,11 @@ types:
         summary: "StartUnixS, StepDurationMinutes, HpAvgWList (W), StoreWhList (Wh); axiom StepListLengths."
 
   flo.params:
-    latest_version: "004"
+    latest_version: "005"
     versioning_strategy: "literal"
     versions:
-      "004":
-        summary: "- Tuning: flo.tuning.bruce 002 -> 003"
+      "005":
+        summary: "- COP model is lift-based: CopLwtCoeff -> CopLwtMinusOatCoeff; CopOatCoeff, CopMin, CopMinOatF dropped"
 
   flo.path.penalties.bruce:
     latest_version: "002"

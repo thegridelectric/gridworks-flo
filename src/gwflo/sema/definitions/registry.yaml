@@ -1,6 +1,6 @@
 metadata:
   registry_version: "1.0"
-  last_updated: "2026-11-24T00:20:00Z"
+  last_updated: "2026-11-24T11:20:00Z"
   maintainer: "gridworks-energy"
 
 formats:
@@ -128,17 +128,17 @@ types:
             - "utc.seconds"
 
   flo.params:
-    latest_version: "004"
+    latest_version: "005"
     owner: gridworks-energy
     versioning_strategy: "literal"
     description: "One request to a FLO for one market slot: bidder, step grid, price and weather forecasts, the modeled store and its state, heat pump facts, market price bounds, and the tuning whose TypeName names the optimizer."
 
     versions:
-      "004":
-        schema_url: "https://schemas.electricity.works/types/flo.params/004"
-        created: "2026-11-19T14:00:00Z"
-        status: "published"
-        summary: "- Tuning: flo.tuning.bruce 002 -> 003"
+      "005":
+        schema_url: "https://schemas.electricity.works/types/flo.params/005"
+        created: "2026-11-23T20:50:00Z"
+        status: "staging"
+        summary: "- COP model is lift-based: CopLwtCoeff -> CopLwtMinusOatCoeff; CopOatCoeff, CopMin, CopMinOatF dropped"
         direct_dependencies:
           structural:
             - "flo.optimal.path:000"
