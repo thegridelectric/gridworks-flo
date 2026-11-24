@@ -89,8 +89,11 @@ bruce is the sibling checkout `../optimal-flexibility`
 pull of the sibling. CI clones the sibling beside the checkout and runs
 without the extra. A build is `python -m gwflo.build`.
 
-`./ci.sh` is the gate: ruff, pyright, pytest. The broker tests need the
-gwbase dev broker (`gw-dev-rabbit`: AMQP on 5672, MQTT on 1885) and
-self-skip without it. The vendored sema snapshot under `src/gwflo/sema`
-is generated: edit `src/gwflo/sema_seed_request.yaml` and run
-`scripts/regen_sema_snapshot.sh`.
+`./ci.sh` is the gate: ruff, pyright, the snapshot's staging check,
+pytest. The broker tests need the gwbase dev broker (`gw-dev-rabbit`:
+AMQP on 5672, MQTT on 1885) and self-skip without it. The vendored sema
+snapshot under `src/gwflo/sema` is generated: edit
+`src/gwflo/sema_seed_request.yaml` and run `scripts/regen_sema_snapshot.sh`.
+The seed has no `staging` block, so the snapshot is published-only;
+`check_staging.py` in the snapshot fails CI on any staging word and on a
+seed that changed since the build.
